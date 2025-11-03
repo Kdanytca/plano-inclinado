@@ -1,0 +1,196 @@
+/* Estilos CSS (se mantienen igual) */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f7ff;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        .value-display {
+            display: inline-block;
+            width: 60px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button#pausar {
+            background: #e74c3c;
+        }
+
+        button#reiniciar {
+            background: #2ecc71;
+        }
+
+        .results {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 280px;
+            margin: 20px auto 0;
+        }
+
+        #canvas-formulas-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 65%;
+        }
+
+        #canvas-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            color: #7f8c8d;
+            max-width: 800px;
+        }
+
+        #lista-resultados {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        #lista-resultados li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+        }
+
+        .formulas {
+            background-color: #e9f3ff;
+            border-radius: 12px;
+            padding: 16px 20px;
+            width: 100%;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', sans-serif;
+            color: #003366;
+            transition: all 0.3s ease;
+        }
+
+        .formulas h3 {
+            margin-bottom: 10px;
+            color: #0056b3;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .formulas p {
+            margin: 8px 0;
+            font-size: 1rem;
+            line-height: 1.4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .formulas .formula-exp {
+            color: #555;
+            font-size: 0.95rem;
+            flex-grow: 1;
+            text-align: right;
+        }
+
+        .formulas .formula-res {
+            font-weight: bold;
+            color: #007bff;
+            font-family: monospace;
+            padding: 2px 5px;
+            background-color: #fff;
+            border-radius: 4px;
+        }
+
+        /* Estilos de pestañas */
+        .view-switcher {
+            display: flex;
+            margin-bottom: -20px;
+            width: 100%;
+            max-width: 65%;
+            gap: 10px;
+        }
+
+        .view-switcher button {
+            background: #ccc;
+            color: #333;
+            border-radius: 12px 12px 0 0;
+            padding: 12px 20px;
+            font-weight: 500;
+            flex: 0;
+            white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+        }
+
+        .view-switcher button.active {
+            background: white;
+            color: #0056b3;
+            font-weight: 700;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
