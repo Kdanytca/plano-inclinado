@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Simulación de Plano Inclinado - Gráficos Implementados</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-    <link rel="stylesheet" href="css/styless.css"/>
+    <link rel="stylesheet" href="css/styless.css" />
 
 </head>
 
@@ -26,7 +26,8 @@
             </div>
 
             <div class="control-group">
-                <label for="gravedad">Gravedad (m/s²): <span id="gravedad-value" class="value-display">9.8</span></label>
+                <label for="gravedad">Gravedad (m/s²): <span id="gravedad-value"
+                        class="value-display">9.8</span></label>
                 <input type="range" id="gravedad" min="1" max="20" step="0.1" value="9.8">
             </div>
 
@@ -48,6 +49,9 @@
                 <button id="reiniciar">Reiniciar</button>
             </div>
 
+            <div style="margin-top: 20px;">
+                <button id="toggle-fuerzas" style="background: #e67e22; flex: none;">Mostrar Fuerzas (OFF)</button>
+            </div>
             <div class="results">
                 <h3>Resultados</h3>
                 <ul id="lista-resultados"></ul>
@@ -60,9 +64,9 @@
                 <button id="show-graph-pos">Gráfico (Posición vs. Tiempo)</button>
                 <button id="show-graph-vel">Gráfico (Velocidad vs. Tiempo)</button>
             </div>
-            
+
             <div id="canvas-container"></div>
-            
+
             <div class="formulas">
                 <h3>📘 Fórmulas Utilizadas y Cálculo Actual</h3>
                 <div id="contenedor-formulas">
@@ -72,7 +76,8 @@
     </div>
 
     <div class="instructions">
-        <p>Haz clic en la regla para posicionar el bloque. Haz doble clic o presiona 'Iniciar' para comenzar la simulación.</p>
+        <p>Proyecto Mesa #1-DSW21A-2025.</p>
+        <p>Simulación realizada por: Kevin Alegria</p>
     </div>
 
     <script>
@@ -88,6 +93,10 @@
         let trayectoriaVel = []; // ❗ NUEVO: Datos para el gráfico {t: tiempo, v: velocidad}
         let dt = 0.04;
 
+        // ❗ NUEVA VARIABLE
+        let mostrarFuerzas = false;
+        let vectorScale = 10; // Escala para dibujar los vectores de fuerza (px por Newton)
+        //
         let baseOriginX = 80;
         let baseOriginYOffset = 80;
         let planeOriginX = baseOriginX;
@@ -116,9 +125,12 @@
                 });
             });
 
+            // ❗ NUEVO LISTENER
+            document.getElementById('toggle-fuerzas').addEventListener('click', toggleFuerzas);
+            // ------------------
             // ❗ Lógica de pestañas - MODIFICADA
             document.getElementById('show-sim').addEventListener('click', () => setView('sim'));
-            document.getElementById('show-graph-pos').addEventListener('click', () => setView('graph-pos')); 
+            document.getElementById('show-graph-pos').addEventListener('click', () => setView('graph-pos'));
             document.getElementById('show-graph-vel').addEventListener('click', () => setView('graph-vel'));
         }
 
@@ -129,7 +141,7 @@
             document.getElementById('show-graph-pos').classList.remove('active');
             document.getElementById('show-graph-vel').classList.remove('active');
             document.getElementById('show-' + view).classList.add('active');
-            redraw(); 
+            redraw();
         }
 
         function windowResized() {
@@ -174,8 +186,8 @@
             const Fp = masa * g * Math.sin(radians(angulo));
             const Fn = masa * g * Math.cos(radians(angulo));
             const Ff = mu * Fn;
-            
-            const posActual_m = (planoLongPx - s) / escala; 
+
+            const posActual_m = (planoLongPx - s) / escala;
             const L = longitud;
 
             let v_calc = 0;
@@ -205,14 +217,19 @@
                 alert("El bloque no se moverá.");
                 return;
             }
+
+            // Si la simulación NO está corriendo:
             if (!corriendo) {
-                if (s <= 0) reiniciar();
-                t = 0;
-                vel = 0;
-                trayectoria = [];
-                trayectoriaGraph = [{ t: 0, s: 0 }]; 
-                trayectoriaVel = [{ t: 0, v: 0 }]; // ❗ Reiniciar
+                // Si ya llegó al final (s <= 0), reinicia a la posición inicial.
+                if (s <= 0) {
+                    reiniciar(); // Esto se encargará de resetear s, t, v al inicio
+                }
+
+                // Si NO está corriendo y NO ha llegado al final, significa que estaba pausada o
+                // se acaba de hacer un "Reiniciar desde pausa" (t=0, v=0 en la posición actual 's').
+                // NO HACEMOS NADA con t, v o trayectorias. Simplemente reanudamos.
             }
+
             calcularAceleracion();
             corriendo = true;
             loop();
@@ -225,13 +242,40 @@
             actualizarFormulasIntuitivas();
         }
 
+        // ✅ RECUERDA DEFINIR TU POSICIÓN INICIAL GLOBALMENTE (e.g., planoLongPx)
+
         function reiniciar() {
-            corriendo = false;
-            t = 0;
-            vel = 0;
-            trayectoria = [];
-            trayectoriaGraph = [{ t: 0, s: 0 }]; 
-            trayectoriaVel = [{ t: 0, v: 0 }]; // ❗ Reiniciar
+            // Definimos el punto inicial del plano (posición s del bloque)
+            // Asumo que tu variable para el inicio del plano es planoLongPx
+            const s_inicial = planoLongPx;
+
+            // Si la posición actual es el inicio del plano, o ya llegó al final, 
+            // hacemos un reinicio completo (RESET TOTAL).
+            if (s >= s_inicial || s <= 0) {
+                corriendo = false;
+                // Reinicio Total: Vuelve a la posición inicial y resetea todo.
+                s = s_inicial;
+                t = 0;
+                vel = 0;
+                trayectoria = [];
+                trayectoriaGraph = [{ t: 0, s: 0 }];
+                trayectoriaVel = [{ t: 0, v: 0 }];
+            } else {
+                // Reinicio desde Pausa (RESET PARCIAL):
+                // Mantiene la posición 's' actual donde está el bloque.
+                // Resetea t, v, y las gráficas.
+                corriendo = false;
+                t = 0;
+                vel = 0;
+                // Las trayectorias deben ser limpiadas y reiniciadas con el punto actual (t=0, s=s_actual).
+                // NOTA: 's' en las gráficas es el desplazamiento desde el inicio del movimiento.
+                const s_actual_grafico = s_inicial - s;
+
+                trayectoria = [];
+                trayectoriaGraph = [{ t: 0, s: s_actual_grafico }]; // Inicia la gráfica desde el desplazamiento actual
+                trayectoriaVel = [{ t: 0, v: 0 }];
+            }
+
             velocidadFinal = 0;
             tiempoFinal = 0;
             calcularAceleracion();
@@ -240,12 +284,25 @@
             actualizarResultados();
             actualizarFormulasIntuitivas();
         }
-
+        // ❗ NUEVA FUNCIÓN DE ALTERNANCIA
+        function toggleFuerzas() {
+            mostrarFuerzas = !mostrarFuerzas;
+            const btn = document.getElementById('toggle-fuerzas');
+            if (mostrarFuerzas) {
+                btn.textContent = 'Mostrar Fuerzas (ON)';
+                btn.style.background = '#2ecc71'; // Verde
+            } else {
+                btn.textContent = 'Mostrar Fuerzas (OFF)';
+                btn.style.background = '#e67e22'; // Naranja
+            }
+            redraw(); // Forzar redibujo para que el cambio sea instantáneo
+        }
+        // ---------
         // ---------- dibujo ----------
         function draw() {
             background(255);
             calcularAceleracion();
-            
+
             // ❗ Alternar vista - MODIFICADA
             if (currentView === 'sim') {
                 drawSim();
@@ -254,7 +311,7 @@
             } else if (currentView === 'graph-vel') {
                 drawGraphVel(); // Nueva función
             }
-            
+
             // Movimiento 
             if (corriendo && a > 1e-6) {
                 const v_prev = vel;
@@ -264,23 +321,23 @@
 
                 t += dt;
                 s -= ds_px;
-                
-                const pos_recorrida_m = (planoLongPx - s) / escala; 
-                
+
+                const pos_recorrida_m = (planoLongPx - s) / escala;
+
                 trayectoria.push({ x: s - blockSize / 2, y: -blockSize / 2 });
                 if (trayectoria.length > 300) trayectoria.shift();
-                
+
                 // Almacenar datos para el gráfico
-                if (t > 0 && t % (dt * 5) < dt) { 
+                if (t > 0 && t % (dt * 5) < dt) {
                     if (s > 0) {
-                         trayectoriaGraph.push({ t: t, s: pos_recorrida_m });
-                         trayectoriaVel.push({ t: t, v: vel }); // ❗ NUEVO: Registrar Velocidad
+                        trayectoriaGraph.push({ t: t, s: pos_recorrida_m });
+                        trayectoriaVel.push({ t: t, v: vel }); // ❗ NUEVO: Registrar Velocidad
                     }
                 }
 
                 if (s <= 0) {
                     const d_total = longitud;
-                    
+
                     // Calcular los valores finales exactos
                     tiempoFinal = Math.sqrt(2 * d_total / a);
                     velocidadFinal = a * tiempoFinal;
@@ -290,15 +347,15 @@
                     const finalVelPoint = { t: tiempoFinal, v: velocidadFinal };
 
                     if (trayectoriaGraph.length > 0) {
-                         trayectoriaGraph[trayectoriaGraph.length - 1] = finalPoint;
+                        trayectoriaGraph[trayectoriaGraph.length - 1] = finalPoint;
                     } else {
-                         trayectoriaGraph.push(finalPoint);
+                        trayectoriaGraph.push(finalPoint);
                     }
 
                     if (trayectoriaVel.length > 0) {
-                         trayectoriaVel[trayectoriaVel.length - 1] = finalVelPoint;
+                        trayectoriaVel[trayectoriaVel.length - 1] = finalVelPoint;
                     } else {
-                         trayectoriaVel.push(finalVelPoint);
+                        trayectoriaVel.push(finalVelPoint);
                     }
 
                     s = 0;
@@ -311,11 +368,11 @@
 
                 s = constrain(s, 0, planoLongPx);
             }
-            
+
             actualizarResultados();
             actualizarFormulasIntuitivas();
         }
-        
+
         // FUNCIÓN PARA DIBUJAR LA SIMULACIÓN
         function drawSim() {
             background(240, 247, 255);
@@ -394,8 +451,14 @@
             fill(0);
             textAlign(CENTER, CENTER);
             text(`${masa} kg`, blockX + blockSize / 2, blockY + blockSize / 2);
+
+            // ❗ NUEVA LLAMADA
+            if (mostrarFuerzas) {
+                drawFuerzas(blockX, blockY, blockSize);
+            }
             pop();
 
+            // ------------------
             // HUD
             fill(20);
             textSize(16);
@@ -403,21 +466,143 @@
             text(`Aceleración: ${a.toFixed(2)} m/s²`, 18, 52);
             text(`Velocidad: ${vel.toFixed(2)} m/s`, 18, 76);
             text(`Tiempo: ${t.toFixed(2)} s`, 18, 100);
-            
+
             pop();
         }
-        
+
+        // ❗ FUNCIÓN: DIBUJO DE FLECHA (ESENCIAL PARA VISUALIZAR VECTORES)
+        function drawArrow(baseX, baseY, targetX, targetY, c, label, labelOffset = 10) {
+
+            // Calcula el punto final del vector
+            const endX = baseX + targetX;
+            const endY = baseY + targetY;
+
+            push();
+            stroke(c);
+            fill(c);
+            strokeWeight(3);
+
+            // Línea del vector: Va del punto de inicio al punto final
+            line(baseX, baseY, endX, endY);
+
+            // Punta de la flecha: Se dibuja en el punto final
+            push();
+            translate(endX, endY); // Traslada el origen para dibujar la punta
+
+            // Rota para alinear la punta con la dirección del vector
+            rotate(atan2(targetY, targetX));
+            triangle(0, -4, 0, 4, 8, 0);
+            pop();
+
+            // Etiqueta
+            noStroke();
+            fill(c);
+            textSize(14);
+            textAlign(CENTER, CENTER);
+
+            // Posicionamiento de la etiqueta
+            let angle = atan2(targetY, targetX);
+            let labelX = baseX + targetX / 2 + cos(angle + HALF_PI) * labelOffset;
+            let labelY = baseY + targetY / 2 + sin(angle + HALF_PI) * labelOffset;
+
+            text(label, labelX, labelY);
+            pop();
+        }
+        // ❗ FUNCIÓN: DIBUJO DE VECTORES DE FUERZA (AJUSTE FINAL DE POSICIÓN Y ETIQUETAS CORTAS)
+        function drawFuerzas(blockX, blockY, blockSize) {
+            // 1. Cálculo de fuerzas
+            const Fg = masa * g;
+            const Fp = Fg * Math.sin(radians(angulo));
+            const Fn = Fg * Math.cos(radians(angulo));
+            const Ff = mu * Fn;
+            const Fnet = a * masa;
+
+            // Punto de origen de los vectores (Centro del bloque) en el sistema ROTADO
+            const centerX_rotated = blockX + blockSize / 2;
+            const centerY_rotated = blockY + blockSize / 2;
+
+            // --- ESCALA DINÁMICA AUMENTADA ---
+            const maxForce = Math.max(Fg, Fp, Fn, Fnet);
+            const SCALE_FACTOR = 2.5;
+            let currentVectorScale = 10;
+
+            if (maxForce > 0) {
+                currentVectorScale = (blockSize * SCALE_FACTOR) / maxForce;
+                if (currentVectorScale > 60) currentVectorScale = 60;
+                if (currentVectorScale < 10) currentVectorScale = 10;
+            }
+
+            // Magnitudes escaladas
+            const lenG = Fg * currentVectorScale;
+            const lenP = Fp * currentVectorScale;
+            const lenN = Fn * currentVectorScale;
+            const lenF = Ff * currentVectorScale;
+            const lenNet = Fnet * currentVectorScale;
+
+            // =======================================================
+            // 1. Fuerzas Locales (Fn, Ff, Fp, Fnet) - ETIQUETAS CORTAS
+
+            // Fn: Eje -Y' (perpendicular)
+            drawArrow(centerX_rotated, centerY_rotated, 0, -lenN, color(52, 152, 219), 'Fₙ', 10);
+
+            // Ff: Eje +X' (hacia la cima)
+            drawArrow(centerX_rotated, centerY_rotated, lenF, 0, color(230, 126, 34), 'Ff', 10);
+
+            // Fp: Eje -X' (hacia abajo)
+            drawArrow(centerX_rotated, centerY_rotated, -lenP, 0, color(155, 89, 182), 'Fₚ', 10);
+
+            // Fnet: Eje -X' (resultante), desplazada en Y'
+            if (Fnet > 1e-6) {
+                drawArrow(centerX_rotated, centerY_rotated - lenN * 0.5, -lenNet, 0, color(46, 204, 113), 'Fnet', 10);
+            }
+
+            // =======================================================
+
+            // =======================================================
+            // 2. Fuerza Gravitatoria (Fg) - Vector Global (ALINEACIÓN Y POSICIÓN CORREGIDA)
+
+            const cosA = cos(radians(angulo));
+            const sinA = sin(radians(angulo));
+
+            // Origen en el centro del cubo en el sistema rotado
+            const Fg_RefX_rotated = blockX + blockSize / 2;
+            const Fg_RefY_rotated = blockY + blockSize / 2; // Usamos el centro exacto (para alineación horizontal)
+
+            // 1. Calcular la posición GLOBAL (sin rotación) del centro del cubo:
+            const Fg_GlobalX = planeOriginX + Fg_RefX_rotated * cosA + Fg_RefY_rotated * sinA;
+            const Fg_GlobalY = planeOriginY + Fg_RefY_rotated * cosA - Fg_RefX_rotated * sinA;
+
+            push();
+            // 2. TEMPORALMENTE ANULAR la transformación de drawSim():
+            rotate(radians(angulo));
+            translate(-planeOriginX, -planeOriginY);
+
+            // 3. TRASLADAR el canvas al punto global calculado (ahora no hay rotación)
+            translate(Fg_GlobalX, Fg_GlobalY);
+
+            // 4. DESPLAZAMIENTO VERTICAL (para mover el origen hacia arriba)
+            // El valor negativo mueve la COLA de la flecha Fg hacia ARRIBA en el canvas (eje Y global).
+            const Y_OFFSET_CANVAS = -blockSize * 0.5; // Mover al borde superior (50% de la altura del cubo)
+
+            // 5. DIBUJAR Fg verticalmente desde la posición global ajustada
+            // Etiqueta: 'Fᵍ' (símbolo corto)
+            drawArrow(0, Y_OFFSET_CANVAS, 0, lenG, color(231, 76, 60), 'Fᵍ', 10);
+
+            pop();
+            // =======================================================
+        }
+        // ----------------------------------------------------
         // ❗ FUNCIÓN PARA DIBUJAR EL GRÁFICO DE POSICIÓN (s vs. t)
         function drawGraphPos() {
             background(255);
             const margin = 50;
             const graphWidth = width - 2 * margin;
             const graphHeight = height - 2 * margin;
-            
+
             const maxS = longitud; // Máxima posición (eje Y)
-            
+
             let currentMaxT = tiempoFinal > 0 ? tiempoFinal : (t > 0 ? t : 2);
-            let maxT = currentMaxT * 1.2; 
+            let maxT = currentMaxT * 1.2;
             if (maxT < 2) maxT = 2;
 
             push();
@@ -428,18 +613,18 @@
             fill(51);
             textAlign(CENTER, TOP);
             text('Gráfico de Posición Recorrida (s) vs. Tiempo (t)', graphWidth / 2, -graphHeight - 30);
-            
+
             textAlign(CENTER, TOP);
             text('s (m)', -25, -graphHeight / 2);
-            
+
             textAlign(CENTER, BOTTOM);
             text('t (s)', graphWidth / 2, 30);
 
             // Dibujar ejes
             stroke(0);
             strokeWeight(2);
-            line(0, 0, graphWidth, 0); 
-            line(0, 0, 0, -graphHeight); 
+            line(0, 0, graphWidth, 0);
+            line(0, 0, 0, -graphHeight);
 
             // Marcas y etiquetas del Eje Y
             strokeWeight(1);
@@ -450,7 +635,7 @@
                 textAlign(RIGHT, CENTER);
                 text(i.toFixed(0), -10, y);
             }
-            
+
             // Marcas y etiquetas del Eje X
             const tStep = maxT > 5 ? 1 : 0.5;
             for (let i = 0; i <= maxT; i += tStep) {
@@ -464,9 +649,9 @@
 
             // Dibujar la trayectoria (Posición vs. Tiempo)
             noFill();
-            stroke(46, 204, 113); 
+            stroke(46, 204, 113);
             strokeWeight(3);
-            
+
             if (trayectoriaGraph.length > 0) {
                 beginShape();
                 for (let point of trayectoriaGraph) {
@@ -475,16 +660,16 @@
                     vertex(x, y);
                 }
                 endShape();
-                
+
                 // Poner un punto al final 
                 const lastPoint = trayectoriaGraph[trayectoriaGraph.length - 1];
                 const x_current = map(lastPoint.t, 0, maxT, 0, graphWidth);
                 const y_current = map(lastPoint.s, 0, maxS, 0, -graphHeight);
-                
-                fill(231, 76, 60); 
+
+                fill(231, 76, 60);
                 noStroke();
                 ellipse(x_current, y_current, 8, 8);
-                
+
                 fill(0);
                 textAlign(LEFT, BOTTOM);
                 text(`(${lastPoint.t.toFixed(2)}s, ${lastPoint.s.toFixed(2)}m)`, x_current + 10, y_current);
@@ -492,20 +677,20 @@
 
             pop();
         }
-        
+
         // ❗ FUNCIÓN PARA DIBUJAR EL GRÁFICO DE VELOCIDAD (v vs. t)
         function drawGraphVel() {
             background(255);
             const margin = 50;
             const graphWidth = width - 2 * margin;
             const graphHeight = height - 2 * margin;
-            
+
             // En el eje Y (velocidad) usamos la velocidad final calculada como máximo
             let maxV = velocidadFinal > 0 ? velocidadFinal * 1.2 : 5;
             if (maxV < 2) maxV = 2;
 
             let currentMaxT = tiempoFinal > 0 ? tiempoFinal : (t > 0 ? t : 2);
-            let maxT = currentMaxT * 1.2; 
+            let maxT = currentMaxT * 1.2;
             if (maxT < 2) maxT = 2;
 
             push();
@@ -516,11 +701,11 @@
             fill(51);
             textAlign(CENTER, TOP);
             text('Gráfico de Velocidad (v) vs. Tiempo (t)', graphWidth / 2, -graphHeight - 30);
-            
+
             // Eje Y (Velocidad 'v' en m/s)
             textAlign(CENTER, TOP);
             text('v (m/s)', -25, -graphHeight / 2);
-            
+
             // Eje X (Tiempo 't' en segundos)
             textAlign(CENTER, BOTTOM);
             text('t (s)', graphWidth / 2, 30);
@@ -541,7 +726,7 @@
                 textAlign(RIGHT, CENTER);
                 text(i.toFixed(1), -10, y);
             }
-            
+
             // Marcas y etiquetas del Eje X (Tiempo)
             const tStep = maxT > 5 ? 1 : 0.5;
             for (let i = 0; i <= maxT; i += tStep) {
@@ -557,7 +742,7 @@
             noFill();
             stroke(52, 152, 219); // Color azul
             strokeWeight(3);
-            
+
             if (trayectoriaVel.length > 0) {
                 beginShape();
                 for (let point of trayectoriaVel) {
@@ -566,16 +751,16 @@
                     vertex(x, y);
                 }
                 endShape();
-                
+
                 // Poner un punto al final 
                 const lastPoint = trayectoriaVel[trayectoriaVel.length - 1];
                 const x_current = map(lastPoint.t, 0, maxT, 0, graphWidth);
                 const y_current = map(lastPoint.v, 0, maxV, 0, -graphHeight);
-                
+
                 fill(231, 76, 60); // Rojo
                 noStroke();
                 ellipse(x_current, y_current, 8, 8);
-                
+
                 fill(0);
                 textAlign(LEFT, BOTTOM);
                 text(`(${lastPoint.t.toFixed(2)}s, ${lastPoint.v.toFixed(2)}m/s)`, x_current + 10, y_current);
@@ -633,7 +818,7 @@
                 formula_aceleracion = `a = g ⋅ (sin(θ) − μ ⋅ cos(θ))`;
                 calc_a = `${g_val.toFixed(2)} ⋅ (sin(${ang.toFixed(1)}°) − ${mu_val.toFixed(2)} ⋅ cos(${ang.toFixed(1)}°))`;
             }
-            
+
             contenedor.innerHTML = `
                 <p><b>Aceleración:</b> ${formula_aceleracion}
                     <span class="formula-exp">${calc_a}</span>
