@@ -1,0 +1,187 @@
+:root {
+    color-scheme: light;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    font-family: "Poppins", Arial, sans-serif;
+    background: linear-gradient(180deg, #96d8ff 0%, #fef6e4 68%, #f4e2c1 100%);
+}
+.layout {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 1.5rem;
+    width: min(1180px, 96vw);
+    padding: clamp(1rem, 2vw, 2rem);
+}
+header {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(14px);
+    border-radius: 1.2rem;
+    padding: 0.8rem 1.4rem;
+    box-shadow: 0 10px 25px rgba(39, 65, 97, 0.15);
+    text-align: center;
+    color: #1d2735;
+}
+header h1 {
+    margin: 0;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+header p {
+    margin: 0.4rem auto 0;
+    max-width: 48ch;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: rgba(29, 39, 53, 0.75);
+}
+.simulator-panel {
+    background: rgba(255, 255, 255, 0.34);
+    border-radius: 2.6rem;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 32px 90px rgba(33, 61, 89, 0.2);
+    padding: clamp(2rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) 1fr;
+    gap: clamp(1.5rem, 3vw, 2.8rem);
+    align-items: center;
+    /* Mejora: Transición para la sombra */
+    transition: box-shadow 0.5s ease-out;
+}
+.metrics {
+    display: grid;
+    gap: 1.4rem;
+    color: #1f2d3f;
+}
+.metrics h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+.control {
+    display: grid;
+    gap: 0.5rem;
+}
+.control label {
+    font-size: 0.9rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(39, 52, 73, 0.7);
+}
+.control input[type="range"] {
+    appearance: none;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(39, 52, 73, 0.16);
+    outline: none;
+}
+.control input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffa9c9, #ffdd8a);
+    box-shadow: 0 10px 18px rgba(255, 133, 155, 0.35);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.control input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+.control input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #ffa9c9, #ffdd8a);
+    box-shadow: 0 10px 18px rgba(255, 133, 155, 0.35);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+.control input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+.readout {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 1.1rem;
+}
+.readout span {
+    padding: 0.55rem 1.05rem;
+    border-radius: 999px;
+    background: rgba(29, 39, 53, 0.1);
+    color: #1f2d3f;
+}
+.actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+button {
+    padding: 1.05rem 2.9rem;
+    border: none;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    background: linear-gradient(135deg, #ff7eb3 0%, #ffb88c 48%, #ffcf6b 100%);
+    cursor: pointer;
+    box-shadow: 0 20px 42px rgba(255, 142, 132, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+button:hover:not(:disabled) {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 28px 52px rgba(255, 142, 132, 0.4);
+}
+button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+.track {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 5 / 3;
+    border-radius: 2.4rem;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(227, 242, 253, 0.92) 100%);
+}
+.track svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.wheel {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+.car-body {
+    fill: url(#carGradient);
+}
+.car-cabin {
+    fill: #f7f9fb;
+    stroke: rgba(39, 52, 73, 0.12);
+    stroke-width: 1.2;
+}
+.car-detail {
+    fill: rgba(255, 255, 255, 0.55);
+}
+.wheel-rim {
+    fill: #1f2d3f;
+}
+.wheel-cap {
+    fill: #f0f6ff;
+}
