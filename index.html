@@ -4,310 +4,1069 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simuladores de Física</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            color: #fff;
-            text-align: center;
-            background: linear-gradient(135deg, #1e90ff, #8a2be2, #00bfff);
-            background-size: 400% 400%;
-            animation: fondo 12s ease infinite;
-            overflow-x: hidden;
-        }
-
-        @keyframes fondo {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        header {
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 35px;
-        }
-
-        .integrante {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.3s ease;
-        }
-
-        .integrante:hover {
-            transform: scale(1.08);
-        }
-
-        .foto {
-            width: 95px;
-            height: 95px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 4px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-        }
-
-        .titulo-proyecto {
-            margin-top: 25px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 2.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            background: linear-gradient(90deg,
-                    #ff0047,
-                    #ff8c00,
-                    #ffee00,
-                    #00ff85,
-                    #009dff,
-                    #b700ff);
-            background-size: 500% 500%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: colorCiclo 6s ease-in-out infinite;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
-        }
-
-        @keyframes colorCiclo {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .foto img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .nombre {
-            margin-top: 8px;
-            font-size: 0.95rem;
-        }
-
-        h1 {
-            margin-top: 60px;
-            font-size: 2.2rem;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        .contenedor {
-            margin-top: 50px;
-            display: flex;
-            justify-content: center;
-            gap: 80px;
-            flex-wrap: wrap;
-        }
-
-        .card {
-            position: relative;
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-decoration: none;
-            color: white;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            overflow: hidden;
-        }
-
-        .card:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
-        }
-
-        .card span {
-            margin-top: 15px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-        }
-
-        /* --- Animaciones personalizadas --- */
-
-        /* Bloque deslizante (Plano Inclinado) */
-        .bloque {
-            position: absolute;
-            bottom: 90px;
-            width: 60px;
-            height: 60px;
-            background: #ffcc00;
-            border-radius: 8px;
-            transform: translateY(-150%);
-            transition: transform 0.8s ease;
-        }
-
-        .card:hover .bloque {
-            transform: translateY(0);
-        }
-
-        /* Cañón y bala (Tiro Parabólico) */
-        .canon {
-            position: absolute;
-            bottom: 90px;
-            width: 70px;
-            height: 30px;
-            background: #444;
-            border-radius: 8px 8px 0 0;
-            transform: rotate(-20deg);
-        }
-
-        .bala {
-            position: absolute;
-            bottom: 110px;
-            left: 110px;
-            width: 15px;
-            height: 15px;
-            background: #ff4444;
-            border-radius: 50%;
-            transform: translate(0, 0);
-            opacity: 0;
-            transition: 0.6s ease;
-        }
-
-        .card:hover .bala {
-            transform: translate(80px, -80px);
-            opacity: 1;
-        }
-
-        footer {
-            margin-top: 70px;
-            font-size: 0.9rem;
-            opacity: 0.85;
-        }
-
-        .foto {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin: 0 auto;
-            box-shadow: 0 0 15px rgba(128, 0, 255, 0.4);
-            transition: transform 0.3s;
-        }
-
-        .foto:hover {
-            transform: scale(1.1);
-        }
-
-        .foto img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center 0px;
-            /* 🔹 Mueve la imagen hacia abajo */
-        }
-    </style>
-
-    <!-- 🔹 Encabezado animado -->
-    <div class="titulo-proyecto">
-        <h2>Mesa #1 — DSW21A</h2>
-    </div>
+    <title>Simulación de Plano Inclinado</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <link rel="stylesheet" href="css/styless.css">
 </head>
 
 <body>
-
-    <!-- 🔹 Integrantes -->
-    <header class="flex flex-wrap justify-center items-center gap-8 mb-12">
-
-        <div class="integrante text-center">
-            <div
-                class="foto w-32 h-32 rounded-full overflow-hidden mx-auto transform transition-transform duration-300 hover:scale-110 shadow-lg shadow-blue-400/40">
-                <img src="img/a.PNG" alt="Abrahan" class="w-full h-full object-cover object-[center_-10px]">
-            </div>
-            <div class="nombre mt-2 text-white font-semibold">Abrahan Piche</div>
+    <!-- BANNER ITCA FEPADE -->
+    <header class="sticky-header">
+        <div class="header-content">
+            <a href="https://abraham06-web.github.io/proyecto-fisica/index.html" class="brand">
+                <img src="itca.png" alt="Logotipo ITCA">
+                <h1>Simulación Plano Inclinado</h1>
+            </a>
+            <a href="https://abraham06-web.github.io/proyecto-fisica/index.html" class="back-button">← Volver</a>
         </div>
-
-        <div class="integrante text-center">
-            <div
-                class="foto w-32 h-32 rounded-full overflow-hidden mx-auto transform transition-transform duration-300 hover:scale-110 shadow-lg shadow-pink-400/40">
-                <img src="img/b.jpg" alt="Brenda" class="w-full h-full object-cover object-[center_-10px]">
-            </div>
-            <div class="nombre mt-2 text-white font-semibold">Brenda Reyes</div>
-        </div>
-
-        <div class="integrante text-center">
-            <div class="foto">
-                <img src="img/g.webp" alt="Gabriela">
-            </div>
-            <div class="nombre">Gabriela Mauricio</div>
-        </div>
-
-
-
-        <div class="integrante text-center">
-            <div
-                class="foto w-32 h-32 rounded-full overflow-hidden mx-auto transform transition-transform duration-300 hover:scale-110 shadow-lg shadow-green-400/40">
-                <img src="img/k.jpeg" alt="Kevin" class="w-full h-full object-cover">
-            </div>
-            <div class="nombre mt-2 text-white font-semibold">Kevin Alegría</div>
-        </div>
-
-        <div class="integrante text-center">
-            <div
-                class="foto w-32 h-32 rounded-full overflow-hidden mx-auto transform transition-transform duration-300 hover:scale-110 shadow-lg shadow-yellow-400/40">
-                <img src="img/e.jpg" alt="Evelyn" class="w-full h-full object-cover">
-            </div>
-            <div class="nombre mt-2 text-white font-semibold">Evelyn Elena</div>
-        </div>
-
-        <div class="integrante text-center">
-            <div
-                class="foto w-32 h-32 rounded-full overflow-hidden mx-auto transform transition-transform duration-300 hover:scale-110 shadow-lg shadow-red-400/40">
-                <img src="img/f.jpg" alt="Fatima" class="w-full h-full object-cover">
-            </div>
-            <div class="nombre mt-2 text-white font-semibold">Fátima Hernández</div>
-        </div>
-
     </header>
+    <h1>Simulación de Plano Inclinado</h1>
 
+    <div class="main-content">
+        <!-- =====================================
+             CONTENEDOR IZQUIERDO: CANVAS + FÓRMULAS
+             ===================================== -->
+        <div class="canvas-container-wrapper">
+            <div id="canvas-formulas-container">
+                <!-- Pestañas -->
+                <div class="view-switcher">
+                    <button id="show-sim" class="active">Simulación</button>
+                    <button id="show-graph-pos">Posición vs Tiempo</button>
+                    <button id="show-graph-vel">Velocidad vs Tiempo</button>
+                </div>
 
-    <!-- 🔹 Título -->
-    <h1>🎮 Escoge tu simulador</h1>
+                <!-- Canvas -->
+                <div id="canvas-container"></div>
 
-    <!-- 🔹 Simuladores -->
-    <div class="contenedor">
-        <a class="card" href="Simulador-inclinado/index.html" target="_blank">
-            <div class="bloque"></div>
-            <span>Plano Inclinado</span>
-        </a>
+                <!-- Tabla de datos para Posición -->
+                <div class="data-table-container" id="data-table-pos" style="display: none;">
+                    <h4>📊 Datos Posición vs Tiempo</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tiempo (s)</th>
+                                <th>Posición X (m)</th>
+                                <th>Posición Y (m)</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table-body-pos">
+                            <tr>
+                                <td>0.00</td>
+                                <td>0.00</td>
+                                <td>0.00</td>
+                                <td>Detenido</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-        <a class="card" href="simulador-parabolico/index.html" target="_blank">
-            <div class="canon"></div>
-            <div class="bala"></div>
-            <span>Tiro Parabólico</span>
-        </a>
+                <!-- Tabla de datos para Velocidad -->
+                <div class="data-table-container" id="data-table-vel" style="display: none;">
+                    <h4>📊 Datos Velocidad vs Tiempo</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tiempo (s)</th>
+                                <th>Velocidad (m/s)</th>
+                                <th>Aceleración (m/s²)</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table-body-vel">
+                            <tr>
+                                <td>0.00</td>
+                                <td>0.00</td>
+                                <td>0.00</td>
+                                <td>Detenido</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Fórmulas en el panel inferior -->
+            <div class="formulas-panel-container">
+                <div class="formulas-header">
+                    <h3>📘 Fórmulas Utilizadas y Cálculo Actual</h3>
+                    <button id="toggle-formulas-desktop">Ocultar Fórmulas</button>
+                </div>
+                <div class="formulas" id="formulas-panel">
+                    <div id="contenedor-formulas"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =====================================
+             CONTENEDOR DERECHO: CONTROLES + DATOS
+             ===================================== -->
+        <div class="controls-data-wrapper">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="angulo">Ángulo (grados): <span id="angulo-value" class="value-display">30</span></label>
+                    <input type="range" id="angulo" min="5" max="85" step="0.5" value="30">
+                    <input type="number" id="angulo-text" min="5" max="85" step="0.5" value="30">
+                    <small class="limits-text">Límite: 5° - 85°</small>
+                    <small class="error-text" id="angulo-error"></small>
+                </div>
+
+                <div class="control-group">
+                    <label for="masa">Masa (kg): <span id="masa-value" class="value-display">2</span></label>
+                    <input type="range" id="masa" min="0.1" max="10" step="0.1" value="2">
+                    <input type="number" id="masa-text" min="0.1" max="10" step="0.1" value="2">
+                    <small class="limits-text">Límite: 0.1 - 10 kg</small>
+                    <small class="error-text" id="masa-error"></small>
+                </div>
+
+                <div class="control-group">
+                    <label for="gravedad">Gravedad (m/s²): <span id="gravedad-value"
+                            class="value-display">9.8</span></label>
+                    <input type="range" id="gravedad" min="1" max="20" step="0.1" value="9.8">
+                    <input type="number" id="gravedad-text" min="1" max="20" step="0.1" value="9.8">
+                    <small class="limits-text">Límite: 1 - 20 m/s²</small>
+                    <small class="error-text" id="gravedad-error"></small>
+                </div>
+
+                <div class="control-group">
+                    <label for="friccion">Coeficiente de fricción: <span id="friccion-value"
+                            class="value-display">0.2</span></label>
+                    <input type="range" id="friccion" min="0" max="1" step="0.01" value="0.2">
+                    <input type="number" id="friccion-text" min="0" max="1" step="0.01" value="0.2">
+                    <small class="limits-text">Límite: 0 - 1</small>
+                    <small class="error-text" id="friccion-error"></small>
+                </div>
+
+                <div class="control-group">
+                    <label for="longitud">Longitud del plano (m): <span id="longitud-value"
+                            class="value-display">5</span></label>
+                    <input type="range" id="longitud" min="1" max="5" step="0.1" value="5">
+                    <input type="number" id="longitud-text" min="1" max="5" step="0.1" value="5">
+                    <small class="limits-text">Límite: 1 - 5 m</small>
+                    <small class="error-text" id="longitud-error"></small>
+                </div>
+
+                <!-- Botones principales -->
+                <div class="buttons">
+                    <button id="iniciar">Iniciar</button>
+                    <button id="pausar">Pausar</button>
+                    <button id="reiniciar">Reiniciar</button>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    <button id="toggle-fuerzas">Mostrar Fuerzas (OFF)</button>
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            <div class="results">
+                <h3 style="margin-top:0; margin-bottom: 10px;">Resultados</h3>
+                <ul id="lista-resultados"></ul>
+            </div>
+        </div>
     </div>
 
-    <footer>
-        © 2025 - Proyecto de Física Aplicada | Universidad XYZ
-    </footer>
+    <!-- BOTONES FIJOS EN MÓVIL -->
+    <div class="mobile-buttons-container">
+        <div class="buttons">
+            <button id="iniciar-mobile">Iniciar</button>
+            <button id="pausar-mobile">Pausar</button>
+            <button id="reiniciar-mobile">Reiniciar</button>
+        </div>
+        <div class="mobile-extra-buttons">
+            <button id="toggle-fuerzas-mobile" style="background: #ff9800;">Mostrar Fuerzas (OFF)</button>
+            <button id="toggle-formulas-mobile" style="background: #9c27b0;">Ocultar Fórmulas</button>
+        </div>
+    </div>
 
+    <!-- LEYENDA MEJORADA -->
+    <div class="footer-legend">
+        <p>Proyecto Mesa #1-DSW21A-2025</p>
+        <p>Simulación realizada por: Kevin Alegria</p>
+    </div>
+
+    <script>
+        // ==========================================
+        // VARIABLES GLOBALES
+        // ==========================================
+        let angulo = 30, masa = 2, g = 9.8, mu = 0.2, longitud = 5;
+        let a = 0, vel = 0, t = 0, corriendo = false;
+        let escala = 100;
+        let planoLongPx = longitud * escala;
+        const blockSize = 36;
+        let s = 0;
+        let trayectoria = [];
+        let trayectoriaGraph = [];
+        let trayectoriaVel = [];
+        // Arrays para almacenar datos de tablas SIEMPRE
+        let datosTablaPos = [];
+        let datosTablaVel = [];
+        let dt = 0.04;
+
+        let mostrarFuerzas = false;
+        let mostrarFormulas = true;
+
+        let baseOriginX = 80;
+        let baseOriginYOffset = 80;
+        let planeOriginX = baseOriginX;
+        let planeOriginY = 0;
+
+        let velocidadFinal = 0;
+        let tiempoFinal = 0;
+        let currentView = 'sim';
+
+        // ==========================================
+        // CONFIGURACIÓN DE CONTROLES
+        // ==========================================
+        const controlsConfig = [
+            { id: 'angulo', min: 5, max: 85, step: 0.5 },
+            { id: 'masa', min: 0.1, max: 10, step: 0.1 },
+            { id: 'gravedad', min: 1, max: 20, step: 0.1 },
+            { id: 'friccion', min: 0, max: 1, step: 0.01 },
+            { id: 'longitud', min: 1, max: 5, step: 0.1 }
+        ];
+
+        function setupControlListeners() {
+            controlsConfig.forEach(config => {
+                const slider = document.getElementById(config.id);
+                const textInput = document.getElementById(config.id + '-text');
+                const valueDisplay = document.getElementById(config.id + '-value');
+                const errorDisplay = document.getElementById(config.id + '-error');
+
+                slider.addEventListener('input', function () {
+                    textInput.value = this.value;
+                    valueDisplay.textContent = this.value;
+                    errorDisplay.style.display = 'none';
+                    reiniciar();
+                });
+
+                textInput.addEventListener('input', function () {
+                    const value = parseFloat(this.value);
+
+                    if (isNaN(value)) {
+                        errorDisplay.textContent = '❌ Valor no válido';
+                        errorDisplay.style.display = 'block';
+                        return;
+                    }
+
+                    if (value < config.min || value > config.max) {
+                        errorDisplay.textContent = `❌ Fuera de rango (${config.min} - ${config.max})`;
+                        errorDisplay.style.display = 'block';
+                        return;
+                    }
+
+                    errorDisplay.style.display = 'none';
+                    slider.value = value;
+                    valueDisplay.textContent = value;
+                    reiniciar();
+                });
+
+                textInput.addEventListener('blur', function () {
+                    const value = parseFloat(this.value);
+                    if (!isNaN(value) && value >= config.min && value <= config.max) {
+                        errorDisplay.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // ==========================================
+        // P5.JS SETUP
+        // ==========================================
+        function setup() {
+            let canvasW, canvasH;
+
+            if (windowWidth < 768) {
+                canvasW = windowWidth - 20;
+                canvasH = canvasW * 0.6;
+            } else {
+                canvasW = floor(windowWidth * 0.55);
+                canvasH = 640;
+            }
+
+            let canvas = createCanvas(canvasW, canvasH);
+            canvas.parent('canvas-container');
+            frameRate(Math.round(1 / dt));
+
+            setupControlListeners();
+            calcularAceleracion();
+            actualizarResultados();
+            actualizarFormulasIntuitivas();
+            noLoop();
+
+            // Botones desktop
+            document.getElementById('iniciar').addEventListener('click', iniciar);
+            document.getElementById('pausar').addEventListener('click', pausar);
+            document.getElementById('reiniciar').addEventListener('click', reiniciar);
+            document.getElementById('toggle-fuerzas').addEventListener('click', toggleFuerzas);
+            document.getElementById('toggle-formulas-desktop').addEventListener('click', toggleFormulas);
+
+            // Botones móvil
+            document.getElementById('iniciar-mobile').addEventListener('click', iniciar);
+            document.getElementById('pausar-mobile').addEventListener('click', pausar);
+            document.getElementById('reiniciar-mobile').addEventListener('click', reiniciar);
+            document.getElementById('toggle-fuerzas-mobile').addEventListener('click', toggleFuerzas);
+            document.getElementById('toggle-formulas-mobile').addEventListener('click', toggleFormulas);
+
+            // Pestañas
+            document.getElementById('show-sim').addEventListener('click', () => setView('sim'));
+            document.getElementById('show-graph-pos').addEventListener('click', () => setView('graph-pos'));
+            document.getElementById('show-graph-vel').addEventListener('click', () => setView('graph-vel'));
+        }
+
+        function windowResized() {
+            let canvasW, canvasH;
+
+            if (windowWidth < 768) {
+                canvasW = windowWidth - 20;
+                canvasH = canvasW * 0.6;
+            } else {
+                canvasW = floor(windowWidth * 0.55);
+                canvasH = 640;
+            }
+
+            resizeCanvas(canvasW, canvasH);
+            calcularAceleracion();
+            redraw();
+        }
+
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-switcher button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('show-sim').classList.toggle('active', view === 'sim');
+            document.getElementById('show-graph-pos').classList.toggle('active', view === 'graph-pos');
+            document.getElementById('show-graph-vel').classList.toggle('active', view === 'graph-vel');
+
+            // Mostrar/ocultar tablas
+            document.getElementById('data-table-pos').style.display = (view === 'graph-pos') ? 'block' : 'none';
+            document.getElementById('data-table-vel').style.display = (view === 'graph-vel') ? 'block' : 'none';
+
+            // Actualizar tablas si están visibles
+            if (view === 'graph-pos' || view === 'graph-vel') {
+                actualizarTablaDatos(true); // Forzar actualización
+            }
+
+            redraw();
+        }
+
+        // ==========================================
+        // FÍSICA Y CÁLCULOS
+        // ==========================================
+        function calcularAceleracion() {
+            angulo = parseFloat(document.getElementById("angulo").value);
+            masa = parseFloat(document.getElementById("masa").value);
+            g = parseFloat(document.getElementById("gravedad").value);
+            mu = parseFloat(document.getElementById("friccion").value);
+            longitud = parseFloat(document.getElementById("longitud").value);
+
+            if (isNaN(longitud) || longitud < 1) longitud = 1;
+            if (longitud > 5) longitud = 5;
+            document.getElementById("longitud").value = longitud;
+
+            a = g * Math.sin(radians(angulo)) - mu * g * Math.cos(radians(angulo));
+            if (a < 0) a = 0;
+
+            escala = 100;
+            planoLongPx = longitud * escala;
+
+            planeOriginX = baseOriginX;
+            planeOriginY = height - baseOriginYOffset;
+
+            if (t === 0 && !corriendo) {
+                s = planoLongPx;
+                vel = 0;
+                trayectoria = [];
+                trayectoriaGraph = [{ t: 0, s: 0 }];
+                trayectoriaVel = [{ t: 0, v: 0 }];
+                // Reiniciar arrays de tablas
+                datosTablaPos = [{ t: 0, x: 0, y: 0, estado: 'Detenido' }];
+                datosTablaVel = [{ t: 0, v: 0, a: 0, estado: 'Detenido' }];
+                velocidadFinal = 0;
+                tiempoFinal = 0;
+            }
+        }
+
+        function actualizarResultados() {
+            const Fp = masa * g * Math.sin(radians(angulo));
+            const Fn = masa * g * Math.cos(radians(angulo));
+            const Ff = mu * Fn;
+
+            const posActual_m = (planoLongPx - s) / escala;
+            const L = longitud;
+
+            let v_calc = 0, t_calc = 0;
+            if (a > 1e-6) {
+                v_calc = Math.sqrt(2 * a * L);
+                t_calc = v_calc / a;
+            }
+
+            const el = document.getElementById("lista-resultados");
+            el.innerHTML = `
+                <li>Ángulo: <b>${angulo.toFixed(1)}°</b></li>
+                <li>Aceleración: <b>${a.toFixed(2)} m/s²</b></li>
+                <li>Velocidad actual: <b>${vel.toFixed(2)} m/s</b></li>
+                <li>Tiempo actual: <b>${t.toFixed(2)} s</b></li>
+                <li>Posición recorrida: <b>${posActual_m.toFixed(2)} m</b></li>
+                <li>Longitud del plano: <b>${L.toFixed(2)} m</b></li>
+                <li style="margin-top: 10px; font-weight: 600; color: #1565c0;">Fuerzas:</li>
+                <li>&nbsp;&nbsp;Fp: <b>${Fp.toFixed(2)} N</b></li>
+                <li>&nbsp;&nbsp;Fn: <b>${Fn.toFixed(2)} N</b></li>
+                <li>&nbsp;&nbsp;Ff: <b>${Ff.toFixed(2)} N</b></li>
+            `;
+        }
+
+        function actualizarTablaDatos(forzarActualizacion = false) {
+            // Siempre acumular datos durante la simulación
+            if (corriendo && a > 1e-6 && s > 0) {
+                const posActual_m = (planoLongPx - s) / escala;
+                const posX = posActual_m * Math.cos(radians(angulo));
+                const posY = posActual_m * Math.sin(radians(angulo));
+                const estado = 'En movimiento';
+
+                // Guardar datos cada cierto intervalo o si estamos cerca del final
+                const intervaloGuardado = dt * 5;
+                const esMomentoGuardar = (t % intervaloGuardado < dt) || (s - (a * dt * dt * escala) <= 0);
+
+                if (esMomentoGuardar) {
+                    // Guardar datos de posición
+                    datosTablaPos.push({
+                        t: t.toFixed(2),
+                        x: posX.toFixed(2),
+                        y: posY.toFixed(2),
+                        estado: estado
+                    });
+
+                    // Guardar datos de velocidad
+                    datosTablaVel.push({
+                        t: t.toFixed(2),
+                        v: vel.toFixed(2),
+                        a: a.toFixed(2),
+                        estado: estado
+                    });
+
+                    // Limitar a 50 filas para no consumir mucha memoria
+                    if (datosTablaPos.length > 50) datosTablaPos.shift();
+                    if (datosTablaVel.length > 50) datosTablaVel.shift();
+                }
+            }
+
+            // Actualizar tablas si están visibles o si se fuerza la actualización
+            const esPosVisible = document.getElementById('data-table-pos').style.display === 'block';
+            const esVelVisible = document.getElementById('data-table-vel').style.display === 'block';
+
+            if (esPosVisible || forzarActualizacion) {
+                const tbodyPos = document.getElementById('data-table-body-pos');
+                tbodyPos.innerHTML = datosTablaPos.map(d =>
+                    `<tr><td>${d.t}</td><td>${d.x}</td><td>${d.y}</td><td>${d.estado}</td></tr>`
+                ).join('');
+            }
+
+            if (esVelVisible || forzarActualizacion) {
+                const tbodyVel = document.getElementById('data-table-body-vel');
+                tbodyVel.innerHTML = datosTablaVel.map(d =>
+                    `<tr><td>${d.t}</td><td>${d.v}</td><td>${d.a}</td><td>${d.estado}</td></tr>`
+                ).join('');
+            }
+        }
+
+        function iniciar() {
+            if (a < 1e-6) {
+                alert("El bloque no se moverá.");
+                return;
+            }
+
+            if (!corriendo && s <= 0) {
+                reiniciar();
+            }
+
+            calcularAceleracion();
+            corriendo = true;
+            loop();
+        }
+
+        function pausar() {
+            corriendo = false;
+            noLoop();
+            actualizarResultados();
+            actualizarFormulasIntuitivas();
+            actualizarTablaDatos(true); // Actualizar tablas al pausar
+        }
+
+        function reiniciar() {
+            const s_inicial = planoLongPx;
+            corriendo = false;
+
+            if (s >= s_inicial || s <= 0) {
+                s = s_inicial;
+            }
+
+            t = 0;
+            vel = 0;
+            trayectoria = [];
+            trayectoriaGraph = [{ t: 0, s: 0 }];
+            trayectoriaVel = [{ t: 0, v: 0 }];
+            // Reiniciar arrays de tablas
+            datosTablaPos = [{ t: 0, x: 0, y: 0, estado: 'Detenido' }];
+            datosTablaVel = [{ t: 0, v: 0, a: 0, estado: 'Detenido' }];
+            velocidadFinal = 0;
+            tiempoFinal = 0;
+
+            calcularAceleracion();
+            noLoop();
+            redraw();
+            actualizarResultados();
+            actualizarFormulasIntuitivas();
+            actualizarTablaDatos(true); // Actualizar tablas al reiniciar
+        }
+
+        function toggleFuerzas() {
+            mostrarFuerzas = !mostrarFuerzas;
+
+            const btns = ['toggle-fuerzas', 'toggle-fuerzas-mobile'];
+            btns.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.textContent = mostrarFuerzas ? 'Mostrar Fuerzas (ON)' : 'Mostrar Fuerzas (OFF)';
+                    btn.style.background = mostrarFuerzas ? '#4caf50' : '#ff9800';
+                }
+            });
+            redraw();
+        }
+
+        function toggleFormulas() {
+            mostrarFormulas = !mostrarFormulas;
+            const panel = document.getElementById('formulas-panel');
+            panel.classList.toggle('hidden', !mostrarFormulas);
+
+            const btns = ['toggle-formulas-desktop', 'toggle-formulas-mobile'];
+            btns.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.textContent = mostrarFormulas ? 'Ocultar Fórmulas' : 'Mostrar Fórmulas';
+                    btn.style.background = mostrarFormulas ? '#9c27b0' : '#8e24aa';
+                }
+            });
+        }
+
+        // ==========================================
+        // DIBUJO Y GRÁFICOS
+        // ==========================================
+        function draw() {
+            background(255);
+            calcularAceleracion();
+
+            if (currentView === 'sim') {
+                drawSim();
+            } else if (currentView === 'graph-pos') {
+                drawGraphPos();
+            } else if (currentView === 'graph-vel') {
+                drawGraphVel();
+            }
+
+            if (corriendo && a > 1e-6) {
+                const v_prev = vel;
+                vel += a * dt;
+                const ds_m = (v_prev * dt + 0.5 * a * dt * dt);
+                const ds_px = ds_m * escala;
+
+                t += dt;
+                s -= ds_px;
+
+                const pos_recorrida_m = (planoLongPx - s) / escala;
+
+                trayectoria.push({ x: s - blockSize / 2, y: -blockSize / 2 });
+                if (trayectoria.length > 300) trayectoria.shift();
+
+                if (t > 0 && t % (dt * 5) < dt) {
+                    if (s > 0) {
+                        trayectoriaGraph.push({ t: t, s: pos_recorrida_m });
+                        trayectoriaVel.push({ t: t, v: vel });
+                    }
+                }
+
+                if (s <= 0) {
+                    const d_total = longitud;
+                    tiempoFinal = Math.sqrt(2 * d_total / a);
+                    velocidadFinal = a * tiempoFinal;
+
+                    const finalPoint = { t: tiempoFinal, s: longitud };
+                    const finalVelPoint = { t: tiempoFinal, v: velocidadFinal };
+
+                    if (trayectoriaGraph.length > 0) {
+                        trayectoriaGraph[trayectoriaGraph.length - 1] = finalPoint;
+                    } else {
+                        trayectoriaGraph.push(finalPoint);
+                    }
+
+                    if (trayectoriaVel.length > 0) {
+                        trayectoriaVel[trayectoriaVel.length - 1] = finalVelPoint;
+                    } else {
+                        trayectoriaVel.push(finalVelPoint);
+                    }
+
+                    // Guardar punto final en tablas
+                    const posXFinal = longitud * Math.cos(radians(angulo));
+                    const posYFinal = longitud * Math.sin(radians(angulo));
+
+                    datosTablaPos.push({
+                        t: tiempoFinal.toFixed(2),
+                        x: posXFinal.toFixed(2),
+                        y: posYFinal.toFixed(2),
+                        estado: 'Finalizado'
+                    });
+
+                    datosTablaVel.push({
+                        t: tiempoFinal.toFixed(2),
+                        v: velocidadFinal.toFixed(2),
+                        a: a.toFixed(2),
+                        estado: 'Finalizado'
+                    });
+
+                    s = 0;
+                    corriendo = false;
+                    noLoop();
+                    t = tiempoFinal;
+                    vel = velocidadFinal;
+
+                    actualizarTablaDatos(true); // Actualizar tablas con el dato final
+                }
+
+                s = constrain(s, 0, planoLongPx);
+            }
+
+            actualizarResultados();
+            actualizarFormulasIntuitivas();
+            actualizarTablaDatos();
+        }
+
+        function drawSim() {
+            background(240, 247, 255);
+
+            push();
+            noStroke();
+            fill(255, 255, 255, 230);
+            rect(12, 12, width - 24, height - 24, 12);
+
+            const baseLength = planoLongPx / cos(radians(angulo));
+            const baseStart = planeOriginX;
+            const baseY = planeOriginY;
+            const stepPx = escala;
+
+            push();
+            translate(baseStart, baseY);
+            stroke(60);
+            strokeWeight(1);
+            line(0, 0, baseLength, 0);
+
+            textSize(14);
+            fill(60);
+            textAlign(CENTER, TOP);
+
+            for (let m = 0; m <= longitud; m++) {
+                const x = m * stepPx;
+                const label = `${m.toFixed(0)}m`;
+                if (x <= baseLength) {
+                    strokeWeight(2);
+                    line(x, 0, x, 10);
+                    noStroke();
+                    text(label, x, 15);
+                }
+            }
+
+            stroke(100);
+            strokeWeight(1);
+            for (let i = 0; i <= baseLength; i += stepPx / 10) {
+                const isMajor = Math.abs(i % stepPx) < 1e-6;
+                if (!isMajor) line(i, 0, i, 5);
+            }
+            pop();
+
+            translate(planeOriginX, planeOriginY);
+            rotate(-radians(angulo));
+
+            const planoLongVisualPx = planoLongPx;
+            noStroke();
+            for (let i = 0; i < planoLongVisualPx; i += 6) {
+                const shade = map(i, 0, planoLongVisualPx, 200, 240);
+                fill(shade, 230, 230, 255);
+                rect(i, 0, 6, 10);
+            }
+
+            stroke(0);
+            strokeWeight(2);
+            line(0, 0, planoLongVisualPx, 0);
+
+            stroke(0);
+            strokeWeight(1);
+            textSize(14);
+
+            for (let m = 0; m <= longitud; m++) {
+                const x = m * stepPx;
+                if (x <= planoLongVisualPx + 1) {
+                    line(x, 0, x, -14);
+                    noStroke();
+                    fill(0);
+                    textAlign(CENTER, BASELINE);
+                    text(`${(longitud - m).toFixed(0)} m`, x, -20);
+                    stroke(0);
+                }
+            }
+
+            for (let i = 0; i <= planoLongVisualPx; i += stepPx / 10) {
+                const isMajor = Math.abs(i % stepPx) < 1e-6;
+                if (!isMajor) line(i, 0, i, -8);
+            }
+
+            push();
+            noFill();
+            stroke(10, 80, 200, 160);
+            strokeWeight(2);
+            if (trayectoria.length > 0) {
+                beginShape();
+                for (let p of trayectoria) vertex(p.x, p.y);
+                endShape();
+            }
+            pop();
+
+            const blockX = s - blockSize;
+            const blockY = -blockSize;
+
+            push();
+            translate(blockX + blockSize * 0.12, blockY + blockSize * 0.5);
+            rotate(0.06);
+            noStroke();
+            fill(0, 0, 0, 40);
+            rect(0, blockSize * 0.55, blockSize * 0.9, blockSize * 0.28, 6);
+            pop();
+
+            stroke(18, 18, 18, 160);
+            strokeWeight(1.2);
+            fill(corriendo ? color(255, 90, 90) : color(255, 140, 140));
+            rect(blockX, blockY, blockSize, blockSize, 6);
+
+            noStroke();
+            fill(0);
+            textAlign(CENTER, CENTER);
+            textSize(13);
+            text(`${masa} kg`, blockX + blockSize / 2, blockY + blockSize / 2);
+
+            if (mostrarFuerzas) {
+                drawFuerzasConstantes(blockX, blockY, blockSize);
+            }
+            pop();
+
+            // HUD INVISIBLE (color transparente)
+            fill(0, 0, 0, 0); // Transparente
+            textSize(16);
+            textAlign(LEFT, TOP);
+            text(`Ángulo: ${angulo}°`, 18, 28);
+            text(`Aceleración: ${a.toFixed(2)} m/s²`, 18, 52);
+            text(`Velocidad: ${vel.toFixed(2)} m/s`, 18, 76);
+            text(`Tiempo: ${t.toFixed(2)} s`, 18, 100);
+
+            pop();
+        }
+
+        function drawFuerzasConstantes(blockX, blockY, blockSize) {
+            // FUERZAS ESTÁTICAS - Tamaño fijo y grande para mejor visibilidad
+            const centerX_rotated = blockX + blockSize / 2;
+            const centerY_rotated = blockY + blockSize / 2;
+
+            // Tamaños fijos y más grandes para que se distingan bien
+            const lenG = blockSize * 2.5;  // Fuerza gravitatoria (más grande)
+            const lenP = blockSize * 1.8;  // Fuerza paralela
+            const lenN = blockSize * 1.5;  // Fuerza normal
+            const lenF = blockSize * 1.2;  // Fuerza de fricción
+            const lenNet = blockSize * 1.0; // Fuerza neta
+
+            push();
+            // Fuerza Normal (perpendicular al plano)
+            drawArrow(centerX_rotated, centerY_rotated, 0, -lenN, color(52, 152, 219), 'Fₙ', 12);
+
+            // Fuerza de Fricción (opuesta al movimiento)
+            drawArrow(centerX_rotated, centerY_rotated, lenF, 0, color(230, 126, 34), 'Ff', 12);
+
+            // Fuerza Paralela (hacia abajo del plano)
+            drawArrow(centerX_rotated, centerY_rotated, -lenP, 0, color(155, 89, 182), 'Fₚ', 12);
+
+            // Fuerza Neta (solo si hay movimiento)
+            if (a > 1e-6) {
+                drawArrow(centerX_rotated, centerY_rotated - lenN * 0.5, -lenNet, 0, color(46, 204, 113), 'Fnet', 12);
+            }
+
+            // Fuerza Gravitatoria (vertical hacia abajo) - transformar coordenadas
+            const cosA = cos(radians(angulo));
+            const sinA = sin(radians(angulo));
+            const Fg_RefX_rotated = blockX + blockSize / 2;
+            const Fg_RefY_rotated = blockY + blockSize / 2;
+            const Fg_GlobalX = planeOriginX + Fg_RefX_rotated * cosA + Fg_RefY_rotated * sinA;
+            const Fg_GlobalY = planeOriginY + Fg_RefY_rotated * cosA - Fg_RefX_rotated * sinA;
+
+            push();
+            rotate(radians(angulo));
+            translate(-planeOriginX, -planeOriginY);
+            translate(Fg_GlobalX, Fg_GlobalY);
+            const Y_OFFSET_CANVAS = -blockSize * 0.5;
+            drawArrow(0, Y_OFFSET_CANVAS, 0, lenG, color(231, 76, 60), 'Fᵍ', 12);
+            pop();
+            pop();
+        }
+
+        function drawArrow(baseX, baseY, targetX, targetY, c, label, labelOffset = 10) {
+            const endX = baseX + targetX;
+            const endY = baseY + targetY;
+
+            push();
+            stroke(c);
+            fill(c);
+            strokeWeight(4); // Grosor aumentado para mejor visibilidad
+            line(baseX, baseY, endX, endY);
+
+            push();
+            translate(endX, endY);
+            rotate(atan2(targetY, targetX));
+            triangle(0, -5, 0, 5, 10, 0); // Punta de flecha más grande
+            pop();
+
+            noStroke();
+            fill(c);
+            textSize(16); // Texto aumentado
+            textAlign(CENTER, CENTER);
+
+            let angle = atan2(targetY, targetX);
+            let labelX = baseX + targetX / 2 + cos(angle + HALF_PI) * labelOffset;
+            let labelY = baseY + targetY / 2 + sin(angle + HALF_PI) * labelOffset;
+
+            text(label, labelX, labelY);
+            pop();
+        }
+
+        function drawGraphPos() {
+            background(255);
+            const margin = 50;
+            const graphWidth = width - 2 * margin;
+            const graphHeight = height - 2 * margin;
+
+            const maxS = longitud;
+            let maxT = tiempoFinal > 0 ? tiempoFinal * 1.1 : (trayectoriaGraph.length > 0 ? Math.max(...trayectoriaGraph.map(p => p.t)) * 1.5 : 5);
+            maxT = Math.max(maxT, 2);
+            maxT = Math.min(maxT, 50);
+
+            push();
+            translate(margin, height - margin);
+
+            textSize(18);
+            fill(51);
+            textAlign(CENTER, TOP);
+            text('Gráfico de Posición Recorrida vs. Tiempo', graphWidth / 2, -graphHeight - 30);
+
+            textAlign(CENTER, TOP);
+            text('s (m)', -25, -graphHeight / 2);
+
+            textAlign(CENTER, BOTTOM);
+            text('t (s)', graphWidth / 2, 30);
+
+            stroke(0);
+            strokeWeight(2);
+            line(0, 0, graphWidth, 0);
+            line(0, 0, 0, -graphHeight);
+
+            strokeWeight(1);
+            textSize(12);
+            for (let i = 0; i <= maxS; i++) {
+                const y = map(i, 0, maxS, 0, -graphHeight);
+                line(-5, y, 5, y);
+                textAlign(RIGHT, CENTER);
+                text(i.toFixed(0), -10, y);
+            }
+
+            const tStep = maxT > 10 ? 2 : (maxT > 5 ? 1 : 0.5);
+            for (let i = 0; i <= maxT; i += tStep) {
+                const x = map(i, 0, maxT, 0, graphWidth);
+                if (x <= graphWidth) {
+                    line(x, -5, x, 5);
+                    textAlign(CENTER, TOP);
+                    text(i.toFixed(1), x, 10);
+                }
+            }
+
+            noFill();
+            stroke(46, 204, 113);
+            strokeWeight(3);
+
+            if (trayectoriaGraph.length > 0) {
+                beginShape();
+                for (let point of trayectoriaGraph) {
+                    const x = map(point.t, 0, maxT, 0, graphWidth);
+                    const y = map(point.s, 0, maxS, 0, -graphHeight);
+                    vertex(x, y);
+                }
+                endShape();
+
+                const lastPoint = trayectoriaGraph[trayectoriaGraph.length - 1];
+                const x_current = map(lastPoint.t, 0, maxT, 0, graphWidth);
+                const y_current = map(lastPoint.s, 0, maxS, 0, -graphHeight);
+
+                fill(231, 76, 60);
+                noStroke();
+                ellipse(x_current, y_current, 8, 8);
+
+                fill(0);
+                textAlign(LEFT, BOTTOM);
+                text(`(${lastPoint.t.toFixed(2)}s, ${lastPoint.s.toFixed(2)}m)`, x_current + 10, y_current);
+            }
+
+            pop();
+        }
+
+        function drawGraphVel() {
+            background(255);
+            const margin = 50;
+            const graphWidth = width - 2 * margin;
+            const graphHeight = height - 2 * margin;
+
+            let maxV = velocidadFinal > 0 ? velocidadFinal * 1.2 : (trayectoriaVel.length > 0 ? Math.max(...trayectoriaVel.map(p => p.v)) * 1.5 : 5);
+            maxV = Math.max(maxV, 2);
+            maxV = Math.min(maxV, 50);
+
+            let maxT = tiempoFinal > 0 ? tiempoFinal * 1.1 : (trayectoriaVel.length > 0 ? Math.max(...trayectoriaVel.map(p => p.t)) * 1.5 : 5);
+            maxT = Math.max(maxT, 2);
+            maxT = Math.min(maxT, 50);
+
+            push();
+            translate(margin, height - margin);
+
+            textSize(18);
+            fill(51);
+            textAlign(CENTER, TOP);
+            text('Gráfico de Velocidad vs. Tiempo', graphWidth / 2, -graphHeight - 30);
+
+            textAlign(CENTER, TOP);
+            text('v (m/s)', -25, -graphHeight / 2);
+
+            textAlign(CENTER, BOTTOM);
+            text('t (s)', graphWidth / 2, 30);
+
+            stroke(0);
+            strokeWeight(2);
+            line(0, 0, graphWidth, 0);
+            line(0, 0, 0, -graphHeight);
+
+            strokeWeight(1);
+            textSize(12);
+            const vStep = maxV > 10 ? 2 : (maxV > 5 ? 1 : 0.5);
+            for (let i = 0; i <= maxV; i += vStep) {
+                const y = map(i, 0, maxV, 0, -graphHeight);
+                line(-5, y, 5, y);
+                textAlign(RIGHT, CENTER);
+                text(i.toFixed(1), -10, y);
+            }
+
+            const tStep = maxT > 10 ? 2 : (maxT > 5 ? 1 : 0.5);
+            for (let i = 0; i <= maxT; i += tStep) {
+                const x = map(i, 0, maxT, 0, graphWidth);
+                if (x <= graphWidth) {
+                    line(x, -5, x, 5);
+                    textAlign(CENTER, TOP);
+                    text(i.toFixed(1), x, 10);
+                }
+            }
+
+            noFill();
+            stroke(52, 152, 219);
+            strokeWeight(3);
+
+            if (trayectoriaVel.length > 0) {
+                beginShape();
+                for (let point of trayectoriaVel) {
+                    const x = map(point.t, 0, maxT, 0, graphWidth);
+                    const y = map(point.v, 0, maxV, 0, -graphHeight);
+                    vertex(x, y);
+                }
+                endShape();
+
+                const lastPoint = trayectoriaVel[trayectoriaVel.length - 1];
+                const x_current = map(lastPoint.t, 0, maxT, 0, graphWidth);
+                const y_current = map(lastPoint.v, 0, maxV, 0, -graphHeight);
+
+                fill(231, 76, 60);
+                noStroke();
+                ellipse(x_current, y_current, 8, 8);
+
+                fill(0);
+                textAlign(LEFT, BOTTOM);
+                text(`(${lastPoint.t.toFixed(2)}s, ${lastPoint.v.toFixed(2)}m/s)`, x_current + 10, y_current);
+            }
+
+            pop();
+        }
+
+        function radians(deg) {
+            return deg * Math.PI / 180;
+        }
+
+        // ==========================================
+        // ACTUALIZACIÓN DE FÓRMULAS
+        // ==========================================
+        function actualizarFormulasIntuitivas() {
+            const ang = parseFloat(document.getElementById("angulo").value);
+            const m = parseFloat(document.getElementById("masa").value);
+            const g_val = parseFloat(document.getElementById("gravedad").value);
+            const mu_val = parseFloat(document.getElementById("friccion").value);
+            const L = parseFloat(document.getElementById("longitud").value);
+
+            const thetaRad = radians(ang);
+            const sin_theta = Math.sin(thetaRad);
+            const cos_theta = Math.cos(thetaRad);
+
+            const Fp = m * g_val * sin_theta;
+            const Fn = m * g_val * cos_theta;
+            const Ff = mu_val * Fn;
+
+            let acc = g_val * sin_theta - mu_val * g_val * cos_theta;
+            if (acc < 0) acc = 0;
+
+            let v_final = 0, t_final = 0;
+            if (acc > 1e-6) {
+                v_final = Math.sqrt(2 * acc * L);
+                t_final = v_final / acc;
+            }
+
+            const contenedor = document.getElementById("contenedor-formulas");
+            let formula_aceleracion, calc_a;
+
+            if (mu_val === 0) {
+                formula_aceleracion = `a = g ⋅ sin(θ)`;
+                calc_a = `${g_val.toFixed(2)} ⋅ sin(${ang.toFixed(1)}°)`;
+            } else {
+                formula_aceleracion = `a = g ⋅ (sin(θ) − μ ⋅ cos(θ))`;
+                calc_a = `${g_val.toFixed(2)} ⋅ (sin(${ang.toFixed(1)}°) − ${mu_val.toFixed(2)} ⋅ cos(${ang.toFixed(1)}°))`;
+            }
+
+            contenedor.innerHTML = `
+                <p><b>Aceleración:</b> ${formula_aceleracion}
+                    <span class="formula-exp">${calc_a}</span>
+                    <span class="formula-res">${acc.toFixed(2)} m/s²</span>
+                </p>
+                <p><b>Velocidad final (Total):</b> v = √(2 ⋅ a ⋅ L)
+                    <span class="formula-exp">√(${2 * acc.toFixed(2)} ⋅ ${L.toFixed(2)})</span>
+                    <span class="formula-res">${v_final.toFixed(2)} m/s</span>
+                </p>
+                <p><b>Tiempo total:</b> t = v / a
+                    <span class="formula-exp">${v_final.toFixed(2)} / ${acc.toFixed(2)}</span>
+                    <span class="formula-res">${t_final.toFixed(2)} s</span>
+                </p>
+                <p><b>Fuerzas (magnitudes):</b></p>
+                <p class="force-line">Fuerza Paralela (Fp): Fp = m ⋅ g ⋅ sin(θ) <span class="formula-res">${Fp.toFixed(2)} N</span></p>
+                <p class="force-line">Fuerza Normal (Fn): Fn = m ⋅ g ⋅ cos(θ) <span class="formula-res">${Fn.toFixed(2)} N</span></p>
+                <p class="force-line">Fuerza Fricción (Ff): Ff = μ ⋅ Fn <span class="formula-res">${Ff.toFixed(2)} N</span></p>
+            `;
+        }
+
+        // Inicialización
+        calcularAceleracion();
+        actualizarResultados();
+        actualizarFormulasIntuitivas();
+    </script>
 </body>
 
 </html>
