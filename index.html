@@ -14,13 +14,12 @@
     <header class="sticky-header">
         <div class="header-content">
             <a href="https://abraham06-web.github.io/proyecto-fisica/index.html" class="brand">
-                <img src="itca.png" alt="Logotipo ITCA">
+                <img src="./itca.png" alt="Logotipo ITCA">
                 <h1>Simulación Plano Inclinado</h1>
             </a>
             <a href="https://abraham06-web.github.io/proyecto-fisica/index.html" class="back-button">← Volver</a>
         </div>
     </header>
-    <h1>Simulación de Plano Inclinado</h1>
 
     <div class="main-content">
         <!-- =====================================
@@ -83,22 +82,26 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <!-- Fórmulas en el panel inferior -->
-            <div class="formulas-panel-container">
-                <div class="formulas-header">
-                    <h3>📘 Fórmulas Utilizadas y Cálculo Actual</h3>
-                    <button id="toggle-formulas-desktop">Ocultar Fórmulas</button>
-                </div>
-                <div class="formulas" id="formulas-panel">
-                    <div id="contenedor-formulas"></div>
+                <!-- =====================================
+                     FÓRMULAS MOVIDAS A LA IZQUIERDA (debajo del canvas)
+                     ===================================== -->
+                <div class="formulas-panel-container desktop-only">
+                    <div class="formulas-header">
+                        <h3>📘 Fórmulas Utilizadas y Cálculo Actual</h3>
+                        <button id="toggle-formulas-desktop">Ocultar Fórmulas</button>
+                    </div>
+                    <div class="formulas-scroll-container">
+                        <div class="formulas" id="formulas-panel">
+                            <div id="contenedor-formulas"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- =====================================
-             CONTENEDOR DERECHO: CONTROLES + DATOS
+             CONTENEDOR DERECHO: CONTROLES + RESULTADOS (SIN FÓRMULAS)
              ===================================== -->
         <div class="controls-data-wrapper">
             <div class="controls">
@@ -157,10 +160,23 @@
                 </div>
             </div>
 
-            <!-- Resultados -->
+            <!-- Resultados (sin fórmulas al lado) -->
             <div class="results">
                 <h3 style="margin-top:0; margin-bottom: 10px;">Resultados</h3>
                 <ul id="lista-resultados"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fórmulas para móvil (solo se muestra en móvil) -->
+    <div class="formulas-panel-container mobile-only">
+        <div class="formulas-header">
+            <h3>📘 Fórmulas Utilizadas</h3>
+            <button id="toggle-formulas-mobile">Ocultar Fórmulas</button>
+        </div>
+        <div class="formulas-scroll-container">
+            <div class="formulas" id="formulas-panel-mobile">
+                <div id="contenedor-formulas-mobile"></div>
             </div>
         </div>
     </div>
@@ -173,8 +189,8 @@
             <button id="reiniciar-mobile">Reiniciar</button>
         </div>
         <div class="mobile-extra-buttons">
-            <button id="toggle-fuerzas-mobile" style="background: #ff9800;">Mostrar Fuerzas (OFF)</button>
-            <button id="toggle-formulas-mobile" style="background: #9c27b0;">Ocultar Fórmulas</button>
+            <button id="toggle-fuerzas-mobile">Mostrar Fuerzas (OFF)</button>
+            <button id="toggle-formulas-mobile">Ocultar Fórmulas</button>
         </div>
     </div>
 
@@ -276,8 +292,9 @@
             let canvasW, canvasH;
 
             if (windowWidth < 768) {
-                canvasW = windowWidth - 20;
-                canvasH = canvasW * 0.6;
+                // Tamaño fijo optimizado para móvil
+                canvasW = Math.min(windowWidth - 20, 400);
+                canvasH = 300; // Altura fija para móvil
             } else {
                 canvasW = floor(windowWidth * 0.55);
                 canvasH = 640;
@@ -311,14 +328,18 @@
             document.getElementById('show-sim').addEventListener('click', () => setView('sim'));
             document.getElementById('show-graph-pos').addEventListener('click', () => setView('graph-pos'));
             document.getElementById('show-graph-vel').addEventListener('click', () => setView('graph-vel'));
+
+            // Mostrar/ocultar elementos según dispositivo
+            toggleDeviceElements();
         }
 
         function windowResized() {
             let canvasW, canvasH;
 
             if (windowWidth < 768) {
-                canvasW = windowWidth - 20;
-                canvasH = canvasW * 0.6;
+                // Tamaño fijo optimizado para móvil
+                canvasW = Math.min(windowWidth - 20, 400);
+                canvasH = 300; // Altura fija para móvil
             } else {
                 canvasW = floor(windowWidth * 0.55);
                 canvasH = 640;
@@ -327,6 +348,19 @@
             resizeCanvas(canvasW, canvasH);
             calcularAceleracion();
             redraw();
+
+            // Actualizar visibilidad de elementos según dispositivo
+            toggleDeviceElements();
+        }
+
+        function toggleDeviceElements() {
+            const isMobile = windowWidth < 768;
+            document.querySelectorAll('.desktop-only').forEach(el => {
+                el.style.display = isMobile ? 'none' : 'block';
+            });
+            document.querySelectorAll('.mobile-only').forEach(el => {
+                el.style.display = isMobile ? 'block' : 'none';
+            });
         }
 
         function setView(view) {
@@ -339,6 +373,21 @@
             // Mostrar/ocultar tablas
             document.getElementById('data-table-pos').style.display = (view === 'graph-pos') ? 'block' : 'none';
             document.getElementById('data-table-vel').style.display = (view === 'graph-vel') ? 'block' : 'none';
+
+            // Ocultar controles y fórmulas en móvil cuando se vean gráficos
+            const isMobile = windowWidth < 768;
+            if (isMobile) {
+                const shouldHide = (view === 'graph-pos' || view === 'graph-vel');
+
+                // Ocultar el contenedor de controles y resultados
+                document.querySelector('.controls-data-wrapper').classList.toggle('hide-on-graph-mobile', shouldHide);
+
+                // Ocultar las fórmulas del panel izquierdo
+                const formulasContainer = document.querySelector('.formulas-panel-container.desktop-only');
+                if (formulasContainer) {
+                    formulasContainer.classList.toggle('hide-on-graph-mobile', shouldHide);
+                }
+            }
 
             // Actualizar tablas si están visibles
             if (view === 'graph-pos' || view === 'graph-vel') {
@@ -365,10 +414,23 @@
             a = g * Math.sin(radians(angulo)) - mu * g * Math.cos(radians(angulo));
             if (a < 0) a = 0;
 
-            escala = 100;
-            planoLongPx = longitud * escala;
+            // Ajuste de escala adaptativa para que quepa en el canvas
+            const availableWidth = width - planeOriginX - 80; // margen derecho de 80px
+            const availableHeight = height - baseOriginYOffset - 80; // margen superior de 80px
 
-            planeOriginX = baseOriginX;
+            // Calcular escalas máximas para cada dirección basadas en las componentes del plano
+            const cosAngle = Math.cos(radians(angulo));
+            const sinAngle = Math.sin(radians(angulo));
+            const escalaX = availableWidth / (longitud * cosAngle);
+            const escalaY = availableHeight / (longitud * sinAngle);
+
+            // Usar la escala menor para asegurar que quepa en ambas direcciones
+            escala = Math.min(escalaX, escalaY);
+
+            // Limitar escala a valores razonables (mínimo 40px/m, máximo 120px/m)
+            escala = Math.max(40, Math.min(escala, 120));
+
+            planoLongPx = longitud * escala;
             planeOriginY = height - baseOriginYOffset;
 
             if (t === 0 && !corriendo) {
@@ -534,8 +596,14 @@
 
         function toggleFormulas() {
             mostrarFormulas = !mostrarFormulas;
-            const panel = document.getElementById('formulas-panel');
-            panel.classList.toggle('hidden', !mostrarFormulas);
+            const panels = ['formulas-panel', 'formulas-panel-mobile'];
+
+            panels.forEach(panelId => {
+                const panel = document.getElementById(panelId);
+                if (panel) {
+                    panel.classList.toggle('hidden', !mostrarFormulas);
+                }
+            });
 
             const btns = ['toggle-formulas-desktop', 'toggle-formulas-mobile'];
             btns.forEach(id => {
@@ -646,7 +714,7 @@
             fill(255, 255, 255, 230);
             rect(12, 12, width - 24, height - 24, 12);
 
-            const baseLength = planoLongPx / cos(radians(angulo));
+            const baseLength = planoLongPx;
             const baseStart = planeOriginX;
             const baseY = planeOriginY;
             const stepPx = escala;
@@ -1032,6 +1100,7 @@
             }
 
             const contenedor = document.getElementById("contenedor-formulas");
+            const contenedorMobile = document.getElementById("contenedor-formulas-mobile");
             let formula_aceleracion, calc_a;
 
             if (mu_val === 0) {
@@ -1042,7 +1111,7 @@
                 calc_a = `${g_val.toFixed(2)} ⋅ (sin(${ang.toFixed(1)}°) − ${mu_val.toFixed(2)} ⋅ cos(${ang.toFixed(1)}°))`;
             }
 
-            contenedor.innerHTML = `
+            const formulasHTML = `
                 <p><b>Aceleración:</b> ${formula_aceleracion}
                     <span class="formula-exp">${calc_a}</span>
                     <span class="formula-res">${acc.toFixed(2)} m/s²</span>
@@ -1060,6 +1129,9 @@
                 <p class="force-line">Fuerza Normal (Fn): Fn = m ⋅ g ⋅ cos(θ) <span class="formula-res">${Fn.toFixed(2)} N</span></p>
                 <p class="force-line">Fuerza Fricción (Ff): Ff = μ ⋅ Fn <span class="formula-res">${Ff.toFixed(2)} N</span></p>
             `;
+
+            if (contenedor) contenedor.innerHTML = formulasHTML;
+            if (contenedorMobile) contenedorMobile.innerHTML = formulasHTML;
         }
 
         // Inicialización

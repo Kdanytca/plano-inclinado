@@ -1,13 +1,49 @@
-/* ==========================================
-           ESTILOS BASE
+ /* ==========================================
+   CLASES PARA OCULTAR EN MÓVIL CUANDO ESTÁ EN GRÁFICOS
+   ========================================== */
+        @media (max-width: 768px) {
+            .hide-on-graph-mobile {
+                display: none !important;
+            }
+        }
+
+        /* ==========================================
+           ESTILOS BASE OPTIMIZADOS
            ========================================== */
+        :root {
+            --primary-color: #1565c0;
+            --secondary-color: #2196f3;
+            --accent-color: #ff9800;
+            --danger-color: #f44336;
+            --success-color: #4caf50;
+            --text-color: #333;
+            --light-bg: #e3f2fd;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ==========================================
+   CLASES DE VISIBILIDAD POR DISPOSITIVO
+   ========================================== */
+        .desktop-only {
+            display: block;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 15px;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            background: linear-gradient(135deg, var(--light-bg) 0%, #bbdefb 100%);
             background-attachment: fixed;
-            color: #333;
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -17,7 +53,7 @@
         }
 
         h1 {
-            color: #1565c0;
+            color: var(--primary-color);
             margin-bottom: 10px;
             font-weight: 600;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -46,21 +82,20 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            max-height: 85vh;
-            overflow-y: auto;
-            overflow-x: hidden;
+            width: 100%;
             padding-right: 5px;
         }
 
-        .controls {
-            background: rgba(255, 255, 255, 0.95);
+        .controls,
+        .results,
+        .formulas {
+            background: var(--card-bg);
             padding: 18px;
             border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
             width: 100%;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            box-sizing: border-box;
         }
 
         .control-group {
@@ -90,7 +125,7 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: #2196f3;
+            background: var(--secondary-color);
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
@@ -108,7 +143,7 @@
         }
 
         input[type="number"]:focus {
-            border-color: #2196f3;
+            border-color: var(--secondary-color);
             outline: none;
         }
 
@@ -117,7 +152,7 @@
             width: 65px;
             text-align: right;
             font-weight: 600;
-            color: #1976d2;
+            color: var(--primary-color);
             font-size: 0.9rem;
         }
 
@@ -130,7 +165,7 @@
         }
 
         .error-text {
-            color: #d32f2f;
+            color: var(--danger-color);
             font-size: 0.75rem;
             display: none;
             font-weight: 600;
@@ -147,7 +182,7 @@
             padding: 10px 12px;
             border: none;
             border-radius: 6px;
-            background: #2196f3;
+            background: var(--secondary-color);
             color: white;
             font-weight: 600;
             cursor: pointer;
@@ -167,36 +202,33 @@
             transform: translateY(0);
         }
 
-        button#pausar {
-            background: #f44336;
+        button#pausar,
+        button#pausar-mobile {
+            background: var(--danger-color);
         }
 
-        button#reiniciar {
-            background: #4caf50;
+        button#reiniciar,
+        button#reiniciar-mobile {
+            background: var(--success-color);
         }
 
-        button#toggle-fuerzas {
-            background: #ff9800;
+        button#toggle-fuerzas,
+        button#toggle-fuerzas-mobile {
+            background: var(--accent-color);
+        }
+
+        button#toggle-formulas-desktop,
+        button#toggle-formulas-mobile {
+            background: #9c27b0;
             flex: none;
-            padding: 8px 10px;
+            padding: 8px 12px;
             font-size: 0.8rem;
-        }
-
-        .results {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            box-sizing: border-box;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         #canvas-container {
             border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
             position: relative;
             background: white;
             border: 1px solid rgba(0, 0, 0, 0.05);
@@ -238,23 +270,24 @@
 
         .view-switcher button:hover {
             background: #bbdefb;
-            color: #1976d2;
+            color: var(--primary-color);
         }
 
         .view-switcher button.active {
             background: white;
-            color: #1565c0;
+            color: var(--primary-color);
             font-weight: 600;
             box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.06);
             transform: translateY(1px);
         }
 
         /* ==========================================
-           FÓRMULAS
+           FÓRMULAS - AHORA EN LA COLUMNA IZQUIERDA
            ========================================== */
         .formulas-panel-container {
             grid-column: 1 / -1;
             margin-top: 20px;
+            width: 100%;
         }
 
         .formulas {
@@ -262,7 +295,7 @@
             border-radius: 14px;
             padding: 18px 22px;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: var(--shadow);
             font-family: 'Segoe UI', sans-serif;
             color: #0d47a1;
             transition: all 0.3s ease;
@@ -283,12 +316,13 @@
 
         .formulas-header h3 {
             margin: 0;
-            color: #1565c0;
+            color: var(--primary-color);
             font-weight: 600;
             font-size: 1.1rem;
         }
 
-        button#toggle-formulas-desktop {
+        button#toggle-formulas-desktop,
+        button#toggle-formulas-mobile {
             background: #9c27b0;
             flex: none;
             padding: 8px 12px;
@@ -317,7 +351,7 @@
 
         .formulas .formula-res {
             font-weight: 600;
-            color: #2196f3;
+            color: var(--secondary-color);
             font-family: 'Fira Code', 'Courier New', monospace;
             padding: 3px 6px;
             background-color: rgba(255, 255, 255, 0.7);
@@ -325,6 +359,90 @@
             min-width: 75px;
             text-align: center;
             font-size: 0.85rem;
+        }
+
+        /* ==========================================
+           CONTENEDOR DE FÓRMULAS CON SCROLL
+           ========================================== */
+        .formulas-scroll-container {
+            overflow-y: auto;
+            max-height: 40vh;
+        }
+
+        @media (max-width: 768px) {
+            .formulas-scroll-container {
+                max-height: 30vh;
+            }
+        }
+
+        /* ==========================================
+           TABLAS DE DATOS
+           ========================================== */
+        .data-table-container {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-height: 220px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .data-table-container h4 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .data-table {
+            width: 90%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .data-table thead {
+            display: block;
+            position: sticky;
+            top: 0;
+            background: #e3f2fd;
+            z-index: 1;
+        }
+
+        .data-table tbody {
+            display: block;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        .data-table tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #e3f2fd;
+        }
+
+        .data-table th {
+            background: #e3f2fd;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .data-table td {
+            color: #37474f;
         }
 
         /* ==========================================
@@ -358,82 +476,62 @@
         }
 
         /* ==========================================
-   ESTILOS DE TABLA DE DATOS
-   ========================================== */
-        .data-table-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 14px;
-            padding: 15px;
-            margin-top: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            box-sizing: border-box;
-            max-height: 220px;
-            overflow-y: auto;
-            /* AGREGAR ESTAS LÍNEAS PARA CENTRAR */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            /* Centra horizontalmente */
-        }
-
-        .data-table-container h4 {
-            margin: 0 0 10px 0;
-            color: #1565c0;
-            font-size: 1rem;
-            width: 100%;
-            /* El título ocupa todo el ancho */
-            text-align: center;
-            /* Centra el texto del título */
-        }
-
-        .data-table {
-            width: 90%;
-            /* Reduce el ancho para que se vea centrado */
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            display: block;
-            /* ESTA LÍNEA CENTRA LA TABLA */
-            margin: 0 auto;
-            /* Centra la tabla horizontalmente */
-        }
-
-        /* El resto del CSS permanece igual */
-        .data-table thead {
-            display: block;
+           HEADER STICKY
+           ========================================== */
+        .sticky-header {
             position: sticky;
-            top: 0;
-            background: #e3f2fd;
-            z-index: 1;
-        }
-
-        .data-table tbody {
-            display: block;
-            max-height: 160px;
-            overflow-y: auto;
-        }
-
-        .data-table tr {
-            display: table;
+            top: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(14px);
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.5rem;
+            box-shadow: 0 10px 25px rgba(39, 65, 97, 0.15);
+            z-index: 1000;
+            margin-bottom: 2rem;
             width: 100%;
-            table-layout: fixed;
+            max-width: 1400px;
         }
 
-        .data-table th,
-        .data-table td {
-            padding: 8px;
-            text-align: center;
-            border-bottom: 1px solid #e3f2fd;
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .data-table th {
-            background: #e3f2fd;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .brand img {
+            height: 45px;
+            width: auto;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            color: var(--primary-color);
+        }
+
+        .back-button {
+            padding: 8px 18px;
+            border-radius: 999px;
+            background: #6c757d;
+            color: white;
             font-weight: 600;
-            color: #1565c0;
+            text-decoration: none;
+            transition: background 0.2s;
+            font-size: 0.9rem;
         }
 
-        .data-table td {
-            color: #37474f;
+        .back-button:hover {
+            background: #5a6268;
         }
 
         /* ==========================================
@@ -443,7 +541,7 @@
             margin-top: 25px;
             text-align: center;
             padding: 15px;
-            background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+            background: linear-gradient(135deg, #0d47a1 0%, var(--primary-color) 100%);
             color: white;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -492,15 +590,6 @@
             .controls-data-wrapper {
                 order: 1;
                 width: 100%;
-                max-height: none;
-                padding-right: 0;
-            }
-
-            .formulas-panel-container {
-                order: 2;
-                width: 100%;
-                grid-column: auto;
-                margin-top: 0;
             }
 
             .view-switcher {
@@ -526,14 +615,8 @@
                 min-height: 220px;
             }
 
-            .controls {
-                padding: 15px;
-            }
-
-            .results {
-                padding: 15px;
-            }
-
+            .controls,
+            .results,
             .formulas {
                 padding: 15px;
             }
@@ -550,72 +633,7 @@
             .data-table td {
                 padding: 6px 4px;
             }
-        }
 
-        /* ==========================================
-   BANNER STICKY HEADER - ITCA FEPADE
-   ========================================== */
-
-        .sticky-header {
-            position: sticky;
-            top: 1rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(14px);
-            border-radius: 1.2rem;
-            padding: 0.8rem 1.5rem;
-            box-shadow: 0 10px 25px rgba(39, 65, 97, 0.15);
-            z-index: 1000;
-            margin-bottom: 2rem;
-            width: 100%;
-            max-width: 1400px;
-            /* Ajusta al ancho de tu contenido */
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .brand img {
-            height: 45px;
-            width: auto;
-        }
-
-        .brand h1 {
-            margin: 0;
-            font-size: clamp(1.4rem, 3vw, 1.8rem);
-            color: #1565c0;
-            /* Ajusta al color de tu diseño */
-        }
-
-        .back-button {
-            padding: 8px 18px;
-            border-radius: 999px;
-            background: #6c757d;
-            color: white;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .back-button:hover {
-            background: #5a6268;
-        }
-
-        /* Responsive para móvil */
-        @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
                 text-align: center;
@@ -623,5 +641,14 @@
 
             .brand {
                 justify-content: center;
+            }
+        }
+
+        /* ==========================================
+           RESPONSIVE - PC PEQUEÑO
+           ========================================== */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1.5fr 1fr;
             }
         }
